@@ -1,5 +1,6 @@
 const core = require("@actions/core");
 import { context, GitHub } from "@actions/github";
+const { DirectOctokit } = require("@octokit/action");
 
 async function run() {
   try {
@@ -30,6 +31,13 @@ async function run() {
       body: message,
     });
     console.log(comment);
+    const { pc } = new DirectOctokit();
+    const { ddata } = await pc.rest.issues.createComment({
+      ...context.repo,
+      issue_number: pull_number,
+      body: message,
+    })
+    console.log("ddata:"+ddata);
   } catch (error) {
     core.setFailed(error.message);
   }
