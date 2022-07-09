@@ -9067,7 +9067,7 @@ async function run() {
     console.log(`The event payload: ${payload}`);
 
     const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = github.getOctokit(github_token);
+    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_0__.GitHub.getOctokit(github_token);
     const pull_number = _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.payload.pull_request.number;
     console.log(pull_number);
     const message = "LGTM";
@@ -9083,7 +9083,7 @@ async function run() {
   }
 }
 
-run(); // コメント
+run();
 
 })();
 

@@ -19,7 +19,7 @@ async function run() {
     console.log(`The event payload: ${payload}`);
 
     const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = github.getOctokit(github_token);
+    const octokit = GitHub.getOctokit(github_token);
     const pull_number = context.payload.pull_request.number;
     console.log(pull_number);
     const message = "LGTM";
