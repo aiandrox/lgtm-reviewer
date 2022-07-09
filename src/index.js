@@ -20,17 +20,17 @@ async function run() {
     console.log(`The event payload: ${payload}`);
 
     const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = GitHub.getOctokit(github_token);
+    // const octokit = GitHub.getOctokit(github_token);
     const pull_number = context.payload.pull_request.number;
     console.log(pull_number);
     const message = "LGTM";
 
-    const { comment } = await octokit.rest.issues.createComment({
-      ...context.repo,
-      issue_number: pull_number,
-      body: message,
-    });
-    console.log(comment);
+    // const { comment } = await octokit.rest.issues.createComment({
+    //   ...context.repo,
+    //   issue_number: pull_number,
+    //   body: message,
+    // });
+    // console.log(comment);
     const { pc } = new DirectOctokit();
     const { ddata } = await pc.rest.issues.createComment({
       ...context.repo,
