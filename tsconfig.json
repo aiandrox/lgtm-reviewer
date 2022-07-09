@@ -4,5 +4,6 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "strict": true
+  "strict": true,
+  "noImplicitAny": true
 }
