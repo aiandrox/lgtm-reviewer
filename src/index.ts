@@ -1,7 +1,7 @@
-const core = require("@actions/core");
-import { context, GitHub } from "@actions/github";
+import * as core from "@actions/core";
+import { context, getOctokit } from "@actions/github";
 
-async function run() {
+const run = async () => {
   try {
     if (context.eventName !== "pull_request") {
       // eslint-disable-next-line no-console
@@ -19,20 +19,21 @@ async function run() {
     console.log(`The event payload: ${payload}`);
 
     const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = GitHub.getOctokit(github_token);
-    const pull_number = context.payload.pull_request.number;
+    const octokit = getOctokit(github_token);
+    const pull_number = context.payload.pull_request!.number;
     console.log(pull_number);
     const message = "LGTM";
 
-    const { comment } = await octokit.rest.issues.createComment({
+    await octokit.rest.issues.createComment({
       ...context.repo,
       issue_number: pull_number,
       body: message,
     });
-    console.log(comment);
   } catch (error) {
-    core.setFailed(error.message);
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+    }
   }
-}
+};
 
 run();
