@@ -1,9 +1,11 @@
+name: Auto merge
+
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - labeled
+  pull_request_target:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
 
 jobs:
   hello_world_job:
