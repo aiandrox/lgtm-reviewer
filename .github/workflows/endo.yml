@@ -1,6 +1,9 @@
 on:
   pull_request:
-    types: [opened]
+    types:
+      - opened
+      - edited
+      - labeled
 
 jobs:
   hello_world_job:
