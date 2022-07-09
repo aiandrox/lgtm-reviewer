@@ -1,6 +1,6 @@
 on:
-  push:
-  workflow_dispatch:
+  pull_request:
+    - open
 
 jobs:
   hello_world_job:
