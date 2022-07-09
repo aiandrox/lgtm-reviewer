@@ -27,7 +27,7 @@ try {
     issue_number: pull_number,
     body: message,
   });
-  console.log({ comment });
+  console.log(comment);
 } catch (error) {
   core.setFailed(error.message);
 }
