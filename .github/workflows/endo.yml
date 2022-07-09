@@ -1,6 +1,6 @@
 on:
   pull_request:
-    - open
+    types: [opened]
 
 jobs:
   hello_world_job:
