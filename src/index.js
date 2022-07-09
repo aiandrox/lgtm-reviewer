@@ -35,4 +35,4 @@ async function run() {
   }
 }
 
-run();
+run(); // コメント
