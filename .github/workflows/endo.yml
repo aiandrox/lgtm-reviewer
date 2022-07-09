@@ -1,6 +1,9 @@
 on:
   pull_request:
-    types: [opened]
+    types:
+      - opened
+      - edited
+      - labeled
 
 jobs:
   hello_world_job:
@@ -12,6 +15,7 @@ jobs:
         uses: aiandrox/lgtm-reviewer@main
         with:
           who-to-greet: "Mona the Octocat"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
