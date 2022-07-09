@@ -2,7 +2,8 @@
   "name": "lgtm-reviewer",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.ts -o lib"
+    "build": "ncc build src/index.ts -o lib",
+    "local-run": "act pull_request -e mock_json.json"
   },
   "dependencies": {
     "@actions/core": "^1.9.0",
