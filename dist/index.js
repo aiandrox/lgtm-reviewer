@@ -9044,42 +9044,44 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 __nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(3336);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_0__);
-const core = __nccwpck_require__(5063);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5063);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(3336);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 async function run() {
   try {
-    if (_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.eventName !== "pull_request") {
+    if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName !== "pull_request") {
       // eslint-disable-next-line no-console
-      console.warn(`event name is not 'pull_request': ${_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.eventName}`);
+      console.warn(`event name is not 'pull_request': ${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName}`);
       return;
     }
     // `who-to-greet` input defined in action metadata file
-    const nameToGreet = core.getInput("who-to-greet");
+    const nameToGreet = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("who-to-greet");
     console.log(`Hello ${nameToGreet}!`);
     const time = new Date().toTimeString();
-    core.setOutput("time", time);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput("time", time);
 
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.payload, undefined, 2);
+    const payload = JSON.stringify(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, undefined, 2);
     console.log(`The event payload: ${payload}`);
 
-    const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_0__.GitHub.getOctokit(github_token);
-    const pull_number = _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.payload.pull_request.number;
+    const github_token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("GITHUB_TOKEN");
+    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub.getOctokit(github_token);
+    const pull_number = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number;
     console.log(pull_number);
     const message = "LGTM";
 
     const { comment } = await octokit.rest.issues.createComment({
-      ..._actions_github__WEBPACK_IMPORTED_MODULE_0__.context.repo,
+      ..._actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo,
       issue_number: pull_number,
       body: message,
     });
     console.log(comment);
   } catch (error) {
-    core.setFailed(error.message);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
   }
 }
 
