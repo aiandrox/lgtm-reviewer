@@ -4,10 +4,7 @@ import { context, getOctokit } from "@actions/github";
 
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = getOctokit(github_token);
-const APPROVABLE_CHANGED_FILES = core.getInput("");
-
-const REACTIONS = ["+1", "laugh", "heart", "hooray", "rocket"] as const;
-type Reaction = typeof REACTIONS[number];
+const APPROVABLE_CHANGED_FILES = 1;
 
 const run = async () => {
   try {
@@ -40,10 +37,24 @@ const run = async () => {
       });
     }
 
-    if (context.payload.pull_request!.changed_files < APPROVABLE_CHANGED_FILES) return
+    const comments = await octokit.rest.pulls.listReviewComments({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: pull_number,
+    });
+    if (
+      comments.data
+        .map((comment) => comment.body_text)
+        .join("")
+        .includes("LGTM")
+    )
+      return;
+
+    if (context.payload.pull_request!.changed_files < APPROVABLE_CHANGED_FILES)
+      return;
     createLgtmComment(pull_number);
     createApprovalReview(pull_number);
-    mergePullRequest
+    mergePullRequest;
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -70,7 +81,7 @@ const createLgtmComment = (pull_number: number) => {
       octokit.rest.issues.createComment({
         ...context.repo,
         issue_number: pull_number,
-        body: `![](${url})`,
+        body: `![LGTM](${url})`,
       });
     });
 };

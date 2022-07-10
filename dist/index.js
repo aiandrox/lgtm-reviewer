@@ -8870,8 +8870,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = (0, github_1.getOctokit)(github_token);
-const APPROVABLE_CHANGED_FILES = core.getInput("");
-const REACTIONS = (/* unused pure expression or super */ null && (["+1", "laugh", "heart", "hooray", "rocket"]));
+const APPROVABLE_CHANGED_FILES = 1;
 const run = async () => {
     try {
         if (github_1.context.eventName !== "pull_request") {
@@ -8895,6 +8894,16 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
+        const comments = await octokit.rest.pulls.listReviewComments({
+            owner: github_1.context.repo.owner,
+            repo: github_1.context.repo.repo,
+            pull_number: pull_number,
+        });
+        if (comments.data
+            .map((comment) => comment.body_text)
+            .join("")
+            .includes("LGTM"))
+            return;
         if (github_1.context.payload.pull_request.changed_files < APPROVABLE_CHANGED_FILES)
             return;
         createLgtmComment(pull_number);
@@ -8925,7 +8934,7 @@ const createLgtmComment = (pull_number) => {
         octokit.rest.issues.createComment({
             ...github_1.context.repo,
             issue_number: pull_number,
-            body: `![](${url})`,
+            body: `![LGTM](${url})`,
         });
     });
 };
