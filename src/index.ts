@@ -38,6 +38,8 @@ const run = async () => {
       });
     }
 
+    // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+    createApprovalReview(pull_number)
     if (context.payload.pull_request!.changed_files > 1)
       approve(pull_number, "LGTM!!"); // 今は実行しない
   } catch (error) {
@@ -46,6 +48,15 @@ const run = async () => {
     }
   }
 };
+
+const createApprovalReview = (pull_number: number) => {
+  octokit.rest.pulls.createReview({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    pull_number: pull_number,
+    event: "APPROVE"
+  })
+}
 
 const addReactions = async (comment_id: number) => {
   await Promise.allSettled(
