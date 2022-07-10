@@ -20,7 +20,6 @@ const run = async () => {
 
     if (context.payload.action == "opened") {
       const chunk = Array.from(
-        // ほげえええええええええ
         new Set(commits.data.map((data) => data.commit.message))
       );
 

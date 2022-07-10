@@ -8879,9 +8879,7 @@ const run = async () => {
             pull_number: pull_number,
         });
         if (github_1.context.payload.action == "opened") {
-            const chunk = Array.from(
-            // ほげえええええええええ
-            new Set(commits.data.map((data) => data.commit.message)));
+            const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
                 ...github_1.context.repo,
