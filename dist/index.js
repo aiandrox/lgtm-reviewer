@@ -8880,6 +8880,7 @@ const run = async () => {
         });
         if (github_1.context.action == "opened") {
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
+            console.log(commits.data);
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             octokit.rest.issues.createComment({
                 ...github_1.context.repo,
