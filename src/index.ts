@@ -6,7 +6,6 @@ const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = getOctokit(github_token);
 
 const REACTIONS = ["+1", "laugh", "heart", "hooray", "rocket"] as const;
-type Reaction = typeof REACTIONS[number];
 
 const run = async () => {
   try {
@@ -76,13 +75,13 @@ const createComment = (pull_number: number) => {
       return res.json();
     })
     .then((data) => {
-      const url:string = data.image[0].url;
+      const url: string = data.image[0].url;
       octokit.rest.issues.createComment({
         ...context.repo,
         issue_number: pull_number,
         body: `![](${url})`,
       });
-    })
+    });
 };
 const mergePullRequest = (pull_number: number) => {
   octokit.rest.pulls.merge({
@@ -92,5 +91,3 @@ const mergePullRequest = (pull_number: number) => {
 };
 
 run();
-
-// diff出す用のゾーン
