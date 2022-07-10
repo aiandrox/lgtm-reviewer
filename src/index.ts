@@ -5,9 +5,6 @@ import { context, getOctokit } from "@actions/github";
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = getOctokit(github_token);
 
-const REACTIONS = ["+1", "laugh", "heart", "hooray", "rocket"] as const;
-type Reaction = typeof REACTIONS[number];
-
 const run = async () => {
   try {
     if (context.eventName !== "pull_request") {
@@ -24,8 +21,6 @@ const run = async () => {
     });
 
     if (context.payload.action == "opened") {
-      if (context.payload.comment) addReactions(context.payload.comment.id);
-
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
@@ -56,18 +51,6 @@ const createApprovalReview = (pull_number: number) => {
     pull_number: pull_number,
     event: "APPROVE",
   });
-};
-
-const addReactions = async (comment_id: number) => {
-  await Promise.allSettled(
-    REACTIONS.map(async (content) => {
-      await octokit.rest.reactions.createForIssueComment({
-        ...context.repo,
-        comment_id,
-        content,
-      });
-    })
-  );
 };
 
 const createComment = (pull_number: number) => {
