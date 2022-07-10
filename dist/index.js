@@ -8880,12 +8880,11 @@ const run = async () => {
         });
         if (github_1.context.payload.action == "opened") {
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
-            console.log(commits.data);
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
                 ...github_1.context.repo,
                 issue_number: pull_number,
-                body: `${randomCommitMessage}がいいね！`,
+                body: `${randomCommitMessage} がいいね！`,
             });
         }
         if (false)

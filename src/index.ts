@@ -22,14 +22,13 @@ const run = async () => {
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
-      console.log(commits.data);
 
       const randomCommitMessage =
         chunk[Math.floor(Math.random() * chunk.length)];
       await octokit.rest.issues.createComment({
         ...context.repo,
         issue_number: pull_number,
-        body: `${randomCommitMessage}がいいね！`,
+        body: `${randomCommitMessage} がいいね！`,
       });
     }
 
