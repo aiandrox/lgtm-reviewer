@@ -1,15 +1,17 @@
-import * as core from "@actions/core";
-import { context, getOctokit } from "@actions/github";
+import * as core from '@actions/core';
+import { context, getOctokit } from '@actions/github';
 
-const github_token = core.getInput("GITHUB_TOKEN");
+const github_token = core.getInput('GITHUB_TOKEN');
 const octokit = getOctokit(github_token);
 
 const run = async () => {
   try {
-    if (context.eventName !== "pull_request") {
+    if (context.eventName !== 'pull_request') {
       console.warn(`event name is not 'pull_request': ${context.eventName}`);
       return;
     }
+
+    console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
 
     const pull_number = context.payload.pull_request!.number;
     const commits = await octokit.rest.pulls.listCommits({
@@ -18,7 +20,7 @@ const run = async () => {
       pull_number: pull_number,
     });
 
-    if (context.payload.action == "opened") {
+    if (context.payload.action == 'opened') {
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
@@ -32,7 +34,7 @@ const run = async () => {
       });
     }
 
-    if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+    if (false) approve(pull_number, 'LGTM!!'); // 今は実行しない
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

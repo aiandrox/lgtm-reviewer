@@ -9,7 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     name: LGTM Reviewer
     steps:
+      - uses: actions/checkout@v2
+      - uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            +(src)/**/*.{ts,js}
+          FILES: |
+            *.md
       - name: lgtm-reviewer
         uses: aiandrox/lgtm-reviewer@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_DIFF_FILTERED: ${{ env.GIT_DIFF_FILTERED }}
