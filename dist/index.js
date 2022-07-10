@@ -8868,25 +8868,28 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
-const github_token = core.getInput("GITHUB_TOKEN");
+const github_token = core.getInput('GITHUB_TOKEN');
 const octokit = (0, github_1.getOctokit)(github_token);
-const APPROVABLE_CHANGED_FILES = core.getInput("");
-const REACTIONS = (/* unused pure expression or super */ null && (["+1", "laugh", "heart", "hooray", "rocket"]));
+const APPROVABLE_CHANGED_FILES = core.getInput('');
+const REACTIONS = (/* unused pure expression or super */ null && (['+1', 'laugh', 'heart', 'hooray', 'rocket']));
 const run = async () => {
     try {
-        if (github_1.context.eventName !== "pull_request") {
+        if (github_1.context.eventName !== 'pull_request') {
             console.warn(`event name is not 'pull_request': ${github_1.context.eventName}`);
             return;
         }
-        console.log(`ファイル差分${core.getInput("GIT_DIFF_FILTERED")}`);
+        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
         const pull_number = github_1.context.payload.pull_request.number;
-        core.setOutput("pull_number", pull_number);
+        core.setOutput('pull_number', pull_number);
         const commits = await octokit.rest.pulls.listCommits({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             pull_number: pull_number,
         });
-        if (github_1.context.payload.action == "opened") {
+        if (github_1.context.payload.action == 'opened') {
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
@@ -8910,11 +8913,11 @@ const createApprovalReview = (pull_number) => {
         owner: github_1.context.repo.owner,
         repo: github_1.context.repo.repo,
         pull_number: pull_number,
-        event: "APPROVE",
+        event: 'APPROVE',
     });
 };
 const createLgtmComment = (pull_number) => {
-    (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
+    (0, node_fetch_1.default)('https://lgtmoon.herokuapp.com/api/images/random')
         .then((res) => {
         return res.json();
     })
