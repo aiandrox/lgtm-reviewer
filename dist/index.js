@@ -8895,6 +8895,8 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
+        // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+        createApprovalReview(pull_number);
         if (github_1.context.payload.pull_request.changed_files > 1)
             approve(pull_number);
     }
@@ -8903,6 +8905,14 @@ const run = async () => {
             core.setFailed(error.message);
         }
     }
+};
+const createApprovalReview = (pull_number) => {
+    octokit.rest.pulls.createReview({
+        owner: github_1.context.repo.owner,
+        repo: github_1.context.repo.repo,
+        pull_number: pull_number,
+        event: "APPROVE"
+    });
 };
 const addReactions = async (comment_id) => {
     await Promise.allSettled(REACTIONS.map(async (content) => {
