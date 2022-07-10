@@ -38,10 +38,10 @@ const run = async () => {
       });
     }
 
-    // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+    // if (false) createComment(pull_number, "LGTM!!"); // 今は実行しない
     createApprovalReview(pull_number)
     if (context.payload.pull_request!.changed_files > 1)
-      approve(pull_number, "LGTM!!"); // 今は実行しない
+      createComment(pull_number, "LGTM!!"); // 今は実行しない
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -70,17 +70,19 @@ const addReactions = async (comment_id: number) => {
   );
 };
 
-const approve = (pull_number: number, message: string) => {
+const createComment = (pull_number: number, message: string) => {
   octokit.rest.issues.createComment({
     ...context.repo,
     issue_number: pull_number,
     body: message,
   });
-  // デバッグに差し支えるのでコメントアウト
-  // octokit.rest.pulls.merge({
-  //   ...context.repo,
-  //   pull_number,
-  // });
 };
+
+const mergePullRequest = (pull_number: number) => {
+  octokit.rest.pulls.merge({
+    ...context.repo,
+    pull_number,
+  });
+}
 
 run();
