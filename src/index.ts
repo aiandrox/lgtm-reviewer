@@ -5,6 +5,7 @@ const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = getOctokit(github_token);
 
 const run = async () => {
+  console.log(context.action);
   try {
     if (context.eventName !== "pull_request") {
       console.warn(`event name is not 'pull_request': ${context.eventName}`);
