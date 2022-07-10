@@ -4,6 +4,9 @@ import { context, getOctokit } from '@actions/github';
 const github_token = core.getInput('GITHUB_TOKEN');
 const octokit = getOctokit(github_token);
 
+const REACTIONS = ['+1', 'laugh', 'heart', 'hooray', 'rocket'] as const;
+type Reaction = typeof REACTIONS[number];
+
 const run = async () => {
   try {
     if (context.eventName !== 'pull_request') {
@@ -21,7 +24,9 @@ const run = async () => {
     });
 
     if (context.payload.action == 'opened') {
+      addReactions(context.payload.pull_request!.id);
       const chunk = Array.from(
+        // ほげえええええええええ
         new Set(commits.data.map((data) => data.commit.message))
       );
 
@@ -34,12 +39,25 @@ const run = async () => {
       });
     }
 
-    if (false) approve(pull_number, 'LGTM!!'); // 今は実行しない
+    if (context.payload.pull_request!.changed_files > 1)
+      approve(pull_number, 'LGTM!!'); // 今は実行しない
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
     }
   }
+};
+
+const addReactions = async (comment_id: number) => {
+  await Promise.allSettled(
+    REACTIONS.map(async (content) => {
+      await octokit.rest.reactions.createForIssueComment({
+        ...context.repo,
+        comment_id,
+        content,
+      });
+    })
+  );
 };
 
 const approve = (pull_number: number, message: string) => {
