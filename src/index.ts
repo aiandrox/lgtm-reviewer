@@ -39,9 +39,10 @@ const run = async () => {
       });
     }
 
-    createApprovalReview(pull_number);
+    // if (false) createComment(pull_number, "LGTM!!"); // 今は実行しない
+    createApprovalReview(pull_number)
     if (context.payload.pull_request!.changed_files > 1)
-      approve(pull_number);
+      createComment(pull_number, "LGTM!!");
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -70,24 +71,19 @@ const addReactions = async (comment_id: number) => {
   );
 };
 
-const approve = (pull_number: number) => {
-  fetch("https://lgtmoon.herokuapp.com/api/images/random")
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      const url:string = data.image[0].url;
-      octokit.rest.issues.createComment({
-        ...context.repo,
-        issue_number: pull_number,
-        body: `![](${url})`,
-      });
-    })
-  // デバッグに差し支えるのでコメントアウト
-  // octokit.rest.pulls.merge({
-  //   ...context.repo,
-  //   pull_number,
-  // });
+const createComment = (pull_number: number, message: string) => {
+  octokit.rest.issues.createComment({
+    ...context.repo,
+    issue_number: pull_number,
+    body: message,
+  });
 };
+
+const mergePullRequest = (pull_number: number) => {
+  octokit.rest.pulls.merge({
+    ...context.repo,
+    pull_number,
+  });
+}
 
 run();
