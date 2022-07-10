@@ -76,7 +76,7 @@ const createComment = (pull_number: number) => {
       return res.json();
     })
     .then((data) => {
-      const url:string = data.image[0].url;
+      const url:string = data.images[0].url;
       octokit.rest.issues.createComment({
         ...context.repo,
         issue_number: pull_number,
