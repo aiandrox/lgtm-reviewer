@@ -26,7 +26,6 @@ const run = async () => {
     });
 
     if (context.payload.action == 'opened') {
-      if (context.payload.comment) addReactions(context.payload.comment.id);
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
@@ -59,18 +58,6 @@ const createApprovalReview = (pull_number: number) => {
   });
 };
 
-const addReactions = async (comment_id: number) => {
-  await Promise.allSettled(
-    REACTIONS.map(async (content) => {
-      await octokit.rest.reactions.createForIssueComment({
-        ...context.repo,
-        comment_id,
-        content,
-      });
-    })
-  );
-};
-
 const createComment = (pull_number: number) => {
   fetch('https://lgtmoon.herokuapp.com/api/images/random')
     .then((res) => {
@@ -85,6 +72,8 @@ const createComment = (pull_number: number) => {
       });
     });
 };
+
+// TODO: ↓どこかで呼び出す
 const mergePullRequest = (pull_number: number) => {
   octokit.rest.pulls.merge({
     ...context.repo,
