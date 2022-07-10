@@ -8895,9 +8895,11 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
+        if (github_1.context.payload.pull_request.changed_files < APPROVABLE_CHANGED_FILES)
+            return;
+        createLgtmComment(pull_number);
         createApprovalReview(pull_number);
-        if (github_1.context.payload.pull_request.changed_files > APPROVABLE_CHANGED_FILES)
-            createLgtmComment(pull_number);
+        mergePullRequest;
     }
     catch (error) {
         if (error instanceof Error) {
