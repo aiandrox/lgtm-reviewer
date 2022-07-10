@@ -17,13 +17,22 @@ const run = async () => {
       repo: context.repo.repo,
       pull_number: pull_number,
     });
-    const chunk = Array.from(
-      new Set(commits.data.map((data) => data.commit.message))
-    );
 
-    console.log(chunk);
+    if (context.action == "opened") {
+      const chunk = Array.from(
+        new Set(commits.data.map((data) => data.commit.message))
+      );
 
-    approve(pull_number, chunk.join("\n"));
+      const randomCommitMessage =
+        chunk[Math.floor(Math.random() * chunk.length)];
+      octokit.rest.issues.createComment({
+        ...context.repo,
+        issue_number: pull_number,
+        body: `${randomCommitMessage}がいいね！`,
+      });
+    }
+
+    approve(pull_number, "LGTM!!");
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
