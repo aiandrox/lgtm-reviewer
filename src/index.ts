@@ -17,7 +17,7 @@ const run = async () => {
       owner: context.repo.owner,
       repo: context.repo.repo,
       pull_number: pull_number,
-    }); // ほげほげ
+    });
 
     if (context.action == "opened") {
       const chunk = Array.from(
