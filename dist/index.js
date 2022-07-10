@@ -8878,13 +8878,14 @@ const run = async () => {
             return;
         }
         const pull_number = github_1.context.payload.pull_request.number;
+        core.setOutput("pull_number", pull_number);
         const commits = await octokit.rest.pulls.listCommits({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             pull_number: pull_number,
         });
         if (github_1.context.payload.action == "opened") {
-            addReactions(github_1.context.payload.pull_request.id);
+            addReactions(github_1.context.payload.comment.id);
             const chunk = Array.from(
             // ほげえええええええええ
             new Set(commits.data.map((data) => data.commit.message)));
@@ -8898,7 +8899,11 @@ const run = async () => {
         // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
         createApprovalReview(pull_number);
         if (github_1.context.payload.pull_request.changed_files > 1)
+<<<<<<< HEAD
             approve(pull_number);
+=======
+            approve(pull_number, "LGTM!!");
+>>>>>>> main
     }
     catch (error) {
         if (error instanceof Error) {
