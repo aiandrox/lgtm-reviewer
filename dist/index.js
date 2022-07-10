@@ -8880,14 +8880,16 @@ const run = async () => {
         });
         if (github_1.context.action == "opened") {
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
+            console.log(commits.data);
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
-            octokit.rest.issues.createComment({
+            await octokit.rest.issues.createComment({
                 ...github_1.context.repo,
                 issue_number: pull_number,
                 body: `${randomCommitMessage}がいいね！`,
             });
         }
-        approve(pull_number, "LGTM!!");
+        if (false)
+            {} // 今は実行しない
     }
     catch (error) {
         if (error instanceof Error) {
