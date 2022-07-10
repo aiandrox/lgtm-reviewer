@@ -8886,9 +8886,7 @@ const run = async () => {
         });
         if (github_1.context.payload.action == "opened") {
             addReactions(github_1.context.payload.comment.id);
-            const chunk = Array.from(
-            // ほげえええええええええ
-            new Set(commits.data.map((data) => data.commit.message)));
+            const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
                 ...github_1.context.repo,
@@ -8896,14 +8894,9 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
-        // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
         createApprovalReview(pull_number);
         if (github_1.context.payload.pull_request.changed_files > 1)
-<<<<<<< HEAD
             approve(pull_number);
-=======
-            approve(pull_number, "LGTM!!");
->>>>>>> main
     }
     catch (error) {
         if (error instanceof Error) {
@@ -8916,7 +8909,7 @@ const createApprovalReview = (pull_number) => {
         owner: github_1.context.repo.owner,
         repo: github_1.context.repo.repo,
         pull_number: pull_number,
-        event: "APPROVE"
+        event: "APPROVE",
     });
 };
 const addReactions = async (comment_id) => {

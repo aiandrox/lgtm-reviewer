@@ -1,5 +1,6 @@
 name: "lgtm reviewer"
 description: "Lonely Gaddem Timeless Manager"
+inputs:
   GITHUB_TOKEN:
     description: "Github token of the repository (automatically created by Github)"
     required: true
