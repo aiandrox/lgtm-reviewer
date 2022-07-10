@@ -8870,13 +8870,15 @@ const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = (0, github_1.getOctokit)(github_token);
-const REACTIONS = ["+1", "laugh", "heart", "hooray", "rocket"];
+const APPROVABLE_CHANGED_FILES = core.getInput("");
+const REACTIONS = (/* unused pure expression or super */ null && (["+1", "laugh", "heart", "hooray", "rocket"]));
 const run = async () => {
     try {
         if (github_1.context.eventName !== "pull_request") {
             console.warn(`event name is not 'pull_request': ${github_1.context.eventName}`);
             return;
         }
+        console.log(`ファイル差分${core.getInput("GIT_DIFF_FILTERED")}`);
         const pull_number = github_1.context.payload.pull_request.number;
         core.setOutput("pull_number", pull_number);
         const commits = await octokit.rest.pulls.listCommits({
@@ -8885,8 +8887,6 @@ const run = async () => {
             pull_number: pull_number,
         });
         if (github_1.context.payload.action == "opened") {
-            if (github_1.context.payload.comment)
-                addReactions(github_1.context.payload.comment.id);
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
@@ -8896,8 +8896,8 @@ const run = async () => {
             });
         }
         createApprovalReview(pull_number);
-        if (github_1.context.payload.pull_request.changed_files > 1)
-            createComment(pull_number);
+        if (github_1.context.payload.pull_request.changed_files > APPROVABLE_CHANGED_FILES)
+            createLgtmComment(pull_number);
     }
     catch (error) {
         if (error instanceof Error) {
@@ -8913,16 +8913,7 @@ const createApprovalReview = (pull_number) => {
         event: "APPROVE",
     });
 };
-const addReactions = async (comment_id) => {
-    await Promise.allSettled(REACTIONS.map(async (content) => {
-        await octokit.rest.reactions.createForIssueComment({
-            ...github_1.context.repo,
-            comment_id,
-            content,
-        });
-    }));
-};
-const createComment = (pull_number) => {
+const createLgtmComment = (pull_number) => {
     (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
         .then((res) => {
         return res.json();
@@ -8938,13 +8929,13 @@ const createComment = (pull_number) => {
 };
 // TODO: ↓どこかで呼び出す
 const mergePullRequest = (pull_number) => {
-    octokit.rest.pulls.merge({
-        ...github_1.context.repo,
-        pull_number,
-    });
+    if (github_1.context.payload.pull_request.mergeable)
+        octokit.rest.pulls.merge({
+            ...github_1.context.repo,
+            pull_number,
+        });
 };
 run();
-// diff出す用のゾーン
 
 
 /***/ }),
