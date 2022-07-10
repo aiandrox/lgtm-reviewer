@@ -24,7 +24,7 @@ const run = async () => {
     });
 
     if (context.payload.action == "opened") {
-      addReactions(context.payload.comment!.id);
+      if (context.payload.comment) addReactions(context.payload.comment.id);
 
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
@@ -39,8 +39,7 @@ const run = async () => {
       });
     }
 
-    // if (false) createComment(pull_number, "LGTM!!"); // 今は実行しない
-    createApprovalReview(pull_number)
+    createApprovalReview(pull_number);
     if (context.payload.pull_request!.changed_files > 1)
       createComment(pull_number, "LGTM!!");
   } catch (error) {
@@ -85,6 +84,8 @@ const mergePullRequest = (pull_number: number) => {
     ...context.repo,
     pull_number,
   });
-}
+};
 
 run();
+
+// diff出す用のゾーン
