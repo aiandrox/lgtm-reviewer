@@ -26,14 +26,14 @@ const run = async () => {
 
       const randomCommitMessage =
         chunk[Math.floor(Math.random() * chunk.length)];
-      octokit.rest.issues.createComment({
+      await octokit.rest.issues.createComment({
         ...context.repo,
         issue_number: pull_number,
         body: `${randomCommitMessage}がいいね！`,
       });
     }
 
-    approve(pull_number, "LGTM!!");
+    if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
