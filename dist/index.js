@@ -8879,7 +8879,7 @@ const run = async () => {
         // Get the JSON webhook payload for the event that triggered the workflow
         // const payload = JSON.stringify(context.payload, undefined, 2);
         // console.log(`The event payload: ${payload}`);
-        const github_token = core.getInput("GITHUB_TOKEN");
+        const github_token = core.getInput("github_token");
         console.log(`github_token: ${github_token}`); // ほげ
         const octokit = (0, github_1.getOctokit)(github_token);
         const pull_number = github_1.context.payload.pull_request.number;

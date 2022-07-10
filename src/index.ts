@@ -18,7 +18,7 @@ const run = async () => {
     // const payload = JSON.stringify(context.payload, undefined, 2);
     // console.log(`The event payload: ${payload}`);
 
-    const github_token = core.getInput("GITHUB_TOKEN");
+    const github_token = core.getInput("github_token");
     console.log(`github_token: ${github_token}`); // ほげ
     const octokit = getOctokit(github_token);
     const pull_number = context.payload.pull_request!.number;
