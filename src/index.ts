@@ -24,7 +24,7 @@ const run = async () => {
     });
 
     if (context.payload.action == "opened") {
-      addReactions(context.payload.comment!.id);
+      if (context.payload.comment) addReactions(context.payload.comment.id);
 
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
@@ -41,7 +41,7 @@ const run = async () => {
 
     createApprovalReview(pull_number);
     if (context.payload.pull_request!.changed_files > 1)
-      approve(pull_number);
+      createComment(pull_number);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -70,7 +70,7 @@ const addReactions = async (comment_id: number) => {
   );
 };
 
-const approve = (pull_number: number) => {
+const createComment = (pull_number: number) => {
   fetch("https://lgtmoon.herokuapp.com/api/images/random")
     .then((res) => {
       return res.json();
@@ -83,12 +83,14 @@ const approve = (pull_number: number) => {
         body: `![](${url})`,
       });
     })
-  // デバッグに差し支えるのでコメントアウト
-  // octokit.rest.pulls.merge({
-  //   ...context.repo,
-  //   pull_number,
-  // });
-  // console.log("確認用");
+};
+const mergePullRequest = (pull_number: number) => {
+  octokit.rest.pulls.merge({
+    ...context.repo,
+    pull_number,
+  });
 };
 
 run();
+
+// diff出す用のゾーン
