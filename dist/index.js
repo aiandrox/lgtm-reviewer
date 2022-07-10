@@ -8892,8 +8892,21 @@ const run = async () => {
                 body: `${randomCommitMessage}がいいね！`,
             });
         }
-        if (true)
-            approve(pull_number, "LGTM!!"); // 今は実行しない
+        await (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
+            .then((res) => {
+            return res.json();
+        })
+            .then((data) => {
+            console.log(data.image);
+            const url = data.image[0].url;
+            octokit.rest.issues.createComment({
+                ...github_1.context.repo,
+                issue_number: pull_number,
+                body: `![](${url})`,
+            });
+        });
+        if (false)
+            {} // 今は実行しない
     }
     catch (error) {
         if (error instanceof Error) {
@@ -8902,20 +8915,18 @@ const run = async () => {
     }
 };
 const approve = (pull_number, message) => {
-    const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = (0, github_1.getOctokit)(github_token);
-    (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
-        .then((res) => {
-        return res.json();
-    })
-        .then((data) => {
-        const url = data.image[0].url;
-        octokit.rest.issues.createComment({
-            ...github_1.context.repo,
-            issue_number: pull_number,
-            body: `![](${url})`,
-        });
-    });
+    // fetch("https://lgtmoon.herokuapp.com/api/images/random")
+    //   .then((res) => {
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     const url:string = data.image[0].url;
+    //     octokit.rest.issues.createComment({
+    //       ...context.repo,
+    //       issue_number: pull_number,
+    //       body: `![](${url})`,
+    //     });
+    //   })
     // デバッグに差し支えるのでコメントアウト
     // octokit.rest.pulls.merge({
     //   ...context.repo,
