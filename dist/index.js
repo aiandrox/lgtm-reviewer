@@ -8878,10 +8878,8 @@ const run = async () => {
             console.warn(`event name is not 'pull_request': ${github_1.context.eventName}`);
             return;
         }
-        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
-        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
-        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
-        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+        console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED').length}`);
+        console.log(typeof core.getInput('GIT_DIFF_FILTERED').length);
         const pull_number = github_1.context.payload.pull_request.number;
         core.setOutput('pull_number', pull_number);
         const commits = await octokit.rest.pulls.listCommits({
