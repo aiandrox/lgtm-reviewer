@@ -38,7 +38,8 @@ const run = async () => {
       });
     }
 
-    if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+    if (context.payload.pull_request!.changed_files > 1)
+      approve(pull_number, "LGTM!!"); // 今は実行しない
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

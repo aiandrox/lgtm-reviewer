@@ -8891,8 +8891,8 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
-        if (false)
-            {} // 今は実行しない
+        if (github_1.context.payload.pull_request.changed_files > 1)
+            approve(pull_number, "LGTM!!"); // 今は実行しない
     }
     catch (error) {
         if (error instanceof Error) {
