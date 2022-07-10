@@ -8867,6 +8867,7 @@ const github_1 = __nccwpck_require__(5438);
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = (0, github_1.getOctokit)(github_token);
 const run = async () => {
+    console.log(github_1.context.action);
     try {
         if (github_1.context.eventName !== "pull_request") {
             console.warn(`event name is not 'pull_request': ${github_1.context.eventName}`);
@@ -8877,7 +8878,7 @@ const run = async () => {
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             pull_number: pull_number,
-        });
+        }); // ほげほげ
         if (github_1.context.action == "opened") {
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             console.log(commits.data);
