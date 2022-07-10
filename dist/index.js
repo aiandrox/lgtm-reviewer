@@ -8861,7 +8861,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const github_token = core.getInput("GITHUB_TOKEN");
@@ -8893,7 +8897,7 @@ const run = async () => {
         }
         createApprovalReview(pull_number);
         if (github_1.context.payload.pull_request.changed_files > 1)
-            createComment(pull_number, "LGTM!!");
+            createComment(pull_number);
     }
     catch (error) {
         if (error instanceof Error) {
@@ -8918,11 +8922,18 @@ const addReactions = async (comment_id) => {
         });
     }));
 };
-const createComment = (pull_number, message) => {
-    octokit.rest.issues.createComment({
-        ...github_1.context.repo,
-        issue_number: pull_number,
-        body: message,
+const createComment = (pull_number) => {
+    (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
+        .then((res) => {
+        return res.json();
+    })
+        .then((data) => {
+        const url = data.images[0].url;
+        octokit.rest.issues.createComment({
+            ...github_1.context.repo,
+            issue_number: pull_number,
+            body: `![](${url})`,
+        });
     });
 };
 // TODO: ↓どこかで呼び出す

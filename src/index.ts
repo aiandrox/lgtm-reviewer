@@ -41,7 +41,7 @@ const run = async () => {
 
     createApprovalReview(pull_number);
     if (context.payload.pull_request!.changed_files > 1)
-      createComment(pull_number, "LGTM!!");
+      createComment(pull_number);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -70,12 +70,19 @@ const addReactions = async (comment_id: number) => {
   );
 };
 
-const createComment = (pull_number: number, message: string) => {
-  octokit.rest.issues.createComment({
-    ...context.repo,
-    issue_number: pull_number,
-    body: message,
-  });
+const createComment = (pull_number: number) => {
+  fetch("https://lgtmoon.herokuapp.com/api/images/random")
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      const url:string = data.images[0].url;
+      octokit.rest.issues.createComment({
+        ...context.repo,
+        issue_number: pull_number,
+        body: `![](${url})`,
+      });
+    })
 };
 
 // TODO: ↓どこかで呼び出す
