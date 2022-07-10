@@ -79,6 +79,7 @@ const createComment = (pull_number: number, message: string) => {
   });
 };
 
+// TODO: ↓どこかで呼び出す
 const mergePullRequest = (pull_number: number) => {
   octokit.rest.pulls.merge({
     ...context.repo,
