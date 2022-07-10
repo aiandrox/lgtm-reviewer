@@ -8925,6 +8925,7 @@ const createComment = (pull_number, message) => {
         body: message,
     });
 };
+// TODO: ↓どこかで呼び出す
 const mergePullRequest = (pull_number) => {
     octokit.rest.pulls.merge({
         ...github_1.context.repo,
