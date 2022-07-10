@@ -1,32 +1,33 @@
-import fetch from "node-fetch";
-import * as core from "@actions/core";
-import { context, getOctokit } from "@actions/github";
+import fetch from 'node-fetch';
+import * as core from '@actions/core';
+import { context, getOctokit } from '@actions/github';
 
-const github_token = core.getInput("GITHUB_TOKEN");
+const github_token = core.getInput('GITHUB_TOKEN');
 const octokit = getOctokit(github_token);
-const APPROVABLE_CHANGED_FILES = core.getInput("");
+const APPROVABLE_CHANGED_FILES = core.getInput('');
 
-const REACTIONS = ["+1", "laugh", "heart", "hooray", "rocket"] as const;
+const REACTIONS = ['+1', 'laugh', 'heart', 'hooray', 'rocket'] as const;
 type Reaction = typeof REACTIONS[number];
 
 const run = async () => {
   try {
-    if (context.eventName !== "pull_request") {
+    if (context.eventName !== 'pull_request') {
       console.warn(`event name is not 'pull_request': ${context.eventName}`);
       return;
     }
 
-    console.log(`ファイル差分${core.getInput("GIT_DIFF_FILTERED")}`);
+    console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED').length}`);
+    console.log(typeof core.getInput('GIT_DIFF_FILTERED').length);
 
     const pull_number = context.payload.pull_request!.number;
-    core.setOutput("pull_number", pull_number);
+    core.setOutput('pull_number', pull_number);
     const commits = await octokit.rest.pulls.listCommits({
       owner: context.repo.owner,
       repo: context.repo.repo,
       pull_number: pull_number,
     });
 
-    if (context.payload.action == "opened") {
+    if (context.payload.action == 'opened') {
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
@@ -56,12 +57,12 @@ const createApprovalReview = (pull_number: number) => {
     owner: context.repo.owner,
     repo: context.repo.repo,
     pull_number: pull_number,
-    event: "APPROVE",
+    event: 'APPROVE',
   });
 };
 
 const createLgtmComment = (pull_number: number) => {
-  fetch("https://lgtmoon.herokuapp.com/api/images/random")
+  fetch('https://lgtmoon.herokuapp.com/api/images/random')
     .then((res) => {
       return res.json();
     })
