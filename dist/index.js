@@ -8875,10 +8875,14 @@ const run = async () => {
         const octokit = (0, github_1.getOctokit)(github_token);
         const pull_number = github_1.context.payload.pull_request.number;
         const message = "LGTM";
-        await octokit.rest.issues.createComment({
+        octokit.rest.issues.createComment({
             ...github_1.context.repo,
             issue_number: pull_number,
             body: message,
+        });
+        octokit.rest.pulls.merge({
+            ...github_1.context.repo,
+            pull_number,
         });
     }
     catch (error) {
