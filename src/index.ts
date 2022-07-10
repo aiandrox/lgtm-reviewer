@@ -15,6 +15,7 @@ const run = async () => {
     }
 
     const pull_number = context.payload.pull_request!.number;
+    core.setOutput("pull_number", pull_number);
     const commits = await octokit.rest.pulls.listCommits({
       owner: context.repo.owner,
       repo: context.repo.repo,
@@ -22,7 +23,7 @@ const run = async () => {
     });
 
     if (context.payload.action == "opened") {
-      addReactions(context.payload.pull_request!.id);
+      addReactions(context.payload.comment!.id);
 
       const chunk = Array.from(
         // ほげえええええええええ
@@ -41,7 +42,7 @@ const run = async () => {
     // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
     createApprovalReview(pull_number)
     if (context.payload.pull_request!.changed_files > 1)
-      approve(pull_number, "LGTM!!"); // 今は実行しない
+      approve(pull_number, "LGTM!!");
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
