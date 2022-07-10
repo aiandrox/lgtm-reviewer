@@ -8864,14 +8864,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
+const github_token = core.getInput("GITHUB_TOKEN");
+const octokit = (0, github_1.getOctokit)(github_token);
 const run = async () => {
     try {
         if (github_1.context.eventName !== "pull_request") {
-            // eslint-disable-next-line no-console
             console.warn(`event name is not 'pull_request': ${github_1.context.eventName}`);
             return;
         }
-        approve();
+        const pull_number = github_1.context.payload.pull_request.number;
+        const commits = await octokit.rest.pulls.listCommits({
+            owner: github_1.context.repo.owner,
+            repo: github_1.context.repo.repo,
+            pull_number: pull_number,
+        });
+        const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
+        console.log(chunk);
+        approve(pull_number, chunk.join("\n"));
     }
     catch (error) {
         if (error instanceof Error) {
@@ -8879,11 +8888,7 @@ const run = async () => {
         }
     }
 };
-const approve = () => {
-    const github_token = core.getInput("GITHUB_TOKEN");
-    const octokit = (0, github_1.getOctokit)(github_token);
-    const pull_number = github_1.context.payload.pull_request.number;
-    const message = "LGTM";
+const approve = (pull_number, message) => {
     octokit.rest.issues.createComment({
         ...github_1.context.repo,
         issue_number: pull_number,

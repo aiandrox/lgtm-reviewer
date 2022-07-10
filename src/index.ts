@@ -7,7 +7,6 @@ const octokit = getOctokit(github_token);
 const run = async () => {
   try {
     if (context.eventName !== "pull_request") {
-      // eslint-disable-next-line no-console
       console.warn(`event name is not 'pull_request': ${context.eventName}`);
       return;
     }
