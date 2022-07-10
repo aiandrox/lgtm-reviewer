@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import * as core from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 
@@ -15,6 +16,7 @@ const run = async () => {
     }
 
     const pull_number = context.payload.pull_request!.number;
+    core.setOutput("pull_number", pull_number);
     const commits = await octokit.rest.pulls.listCommits({
       owner: context.repo.owner,
       repo: context.repo.repo,
@@ -22,10 +24,9 @@ const run = async () => {
     });
 
     if (context.payload.action == "opened") {
-      addReactions(context.payload.pull_request!.id);
+      addReactions(context.payload.comment!.id);
 
       const chunk = Array.from(
-        // ほげえええええええええ
         new Set(commits.data.map((data) => data.commit.message))
       );
 
@@ -41,7 +42,7 @@ const run = async () => {
     // if (false) createComment(pull_number, "LGTM!!"); // 今は実行しない
     createApprovalReview(pull_number)
     if (context.payload.pull_request!.changed_files > 1)
-      createComment(pull_number, "LGTM!!"); // 今は実行しない
+      createComment(pull_number, "LGTM!!");
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -54,9 +55,9 @@ const createApprovalReview = (pull_number: number) => {
     owner: context.repo.owner,
     repo: context.repo.repo,
     pull_number: pull_number,
-    event: "APPROVE"
-  })
-}
+    event: "APPROVE",
+  });
+};
 
 const addReactions = async (comment_id: number) => {
   await Promise.allSettled(

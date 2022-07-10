@@ -8861,7 +8861,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const github_token = core.getInput("GITHUB_TOKEN");
@@ -8874,16 +8878,15 @@ const run = async () => {
             return;
         }
         const pull_number = github_1.context.payload.pull_request.number;
+        core.setOutput("pull_number", pull_number);
         const commits = await octokit.rest.pulls.listCommits({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             pull_number: pull_number,
         });
         if (github_1.context.payload.action == "opened") {
-            addReactions(github_1.context.payload.pull_request.id);
-            const chunk = Array.from(
-            // ほげえええええええええ
-            new Set(commits.data.map((data) => data.commit.message)));
+            addReactions(github_1.context.payload.comment.id);
+            const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
                 ...github_1.context.repo,
@@ -8891,14 +8894,23 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
+        createApprovalReview(pull_number);
         if (github_1.context.payload.pull_request.changed_files > 1)
-            approve(pull_number, "LGTM!!"); // 今は実行しない
+            approve(pull_number);
     }
     catch (error) {
         if (error instanceof Error) {
             core.setFailed(error.message);
         }
     }
+};
+const createApprovalReview = (pull_number) => {
+    octokit.rest.pulls.createReview({
+        owner: github_1.context.repo.owner,
+        repo: github_1.context.repo.repo,
+        pull_number: pull_number,
+        event: "APPROVE",
+    });
 };
 const addReactions = async (comment_id) => {
     await Promise.allSettled(REACTIONS.map(async (content) => {
@@ -8909,11 +8921,18 @@ const addReactions = async (comment_id) => {
         });
     }));
 };
-const approve = (pull_number, message) => {
-    octokit.rest.issues.createComment({
-        ...github_1.context.repo,
-        issue_number: pull_number,
-        body: message,
+const approve = (pull_number) => {
+    (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
+        .then((res) => {
+        return res.json();
+    })
+        .then((data) => {
+        const url = data.image[0].url;
+        octokit.rest.issues.createComment({
+            ...github_1.context.repo,
+            issue_number: pull_number,
+            body: `![](${url})`,
+        });
     });
     // デバッグに差し支えるのでコメントアウト
     // octokit.rest.pulls.merge({
