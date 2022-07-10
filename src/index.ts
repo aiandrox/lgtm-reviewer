@@ -1,6 +1,9 @@
 import * as core from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 
+const github_token = core.getInput("GITHUB_TOKEN");
+const octokit = getOctokit(github_token);
+
 const run = async () => {
   try {
     if (context.eventName !== "pull_request") {
@@ -9,7 +12,19 @@ const run = async () => {
       return;
     }
 
-    approve();
+    const pull_number = context.payload.pull_request!.number;
+    const commits = await octokit.rest.pulls.listCommits({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: pull_number,
+    });
+    const chunk = Array.from(
+      new Set(commits.data.map((data) => data.commit.message))
+    );
+
+    console.log(chunk);
+
+    approve(pull_number, chunk.join("\n"));
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -17,12 +32,7 @@ const run = async () => {
   }
 };
 
-const approve = () => {
-  const github_token = core.getInput("GITHUB_TOKEN");
-  const octokit = getOctokit(github_token);
-  const pull_number = context.payload.pull_request!.number;
-  const message = "LGTM";
-
+const approve = (pull_number: number, message: string) => {
   octokit.rest.issues.createComment({
     ...context.repo,
     issue_number: pull_number,
