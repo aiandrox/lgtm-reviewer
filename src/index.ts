@@ -96,3 +96,4 @@ const mergePullRequest = (pull_number: number) => {
 };
 
 run();
+// hoge
