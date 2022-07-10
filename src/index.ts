@@ -46,7 +46,6 @@ const run = async () => {
     if (error instanceof Error) {
       core.setFailed(error.message);
     }
-    console.log('approve test')
   }
 };
 
