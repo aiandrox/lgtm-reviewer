@@ -8,11 +8,3 @@ Goddamn
 Timeless
 Manager
 ```
-
-
-## 環境構築
-
-```sh
-npm install
-cp ./.git_template/hooks/pre-commit ./.git/hooks/pre-commit
-```

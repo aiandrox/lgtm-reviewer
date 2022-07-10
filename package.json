@@ -5,6 +5,11 @@
     "build": "ncc build src/index.ts -o dist",
     "local-run": "act pull_request -e mock_json.json"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build"
+    }
+  },
   "dependencies": {
     "@actions/core": "^1.9.0",
     "@actions/github": "^5.0.3",
@@ -13,6 +18,7 @@
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
     "@types/node": "^18.0.3",
+    "husky": "^8.0.1",
     "typescript": "^4.7.4"
   }
 }
