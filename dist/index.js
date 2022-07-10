@@ -8939,6 +8939,7 @@ const approve = (pull_number) => {
     //   ...context.repo,
     //   pull_number,
     // });
+    // console.log("確認用");
 };
 run();
 
