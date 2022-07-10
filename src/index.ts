@@ -5,7 +5,6 @@ const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = getOctokit(github_token);
 
 const run = async () => {
-  console.log(context.action);
   try {
     if (context.eventName !== "pull_request") {
       console.warn(`event name is not 'pull_request': ${context.eventName}`);
@@ -19,7 +18,7 @@ const run = async () => {
       pull_number: pull_number,
     });
 
-    if (context.action == "opened") {
+    if (context.payload.action == "opened") {
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
