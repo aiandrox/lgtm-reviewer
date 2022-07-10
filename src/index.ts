@@ -22,7 +22,7 @@ const run = async () => {
       const chunk = Array.from(
         new Set(commits.data.map((data) => data.commit.message))
       );
-      console.log(commits.data);
+      console.log(commits.data); // ここ！
 
       const randomCommitMessage =
         chunk[Math.floor(Math.random() * chunk.length)];
