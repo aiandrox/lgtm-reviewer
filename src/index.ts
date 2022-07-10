@@ -16,6 +16,9 @@ const run = async () => {
     }
 
     console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+    console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+    console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
+    console.log(`ファイル差分${core.getInput('GIT_DIFF_FILTERED')}`);
 
     const pull_number = context.payload.pull_request!.number;
     core.setOutput('pull_number', pull_number);
