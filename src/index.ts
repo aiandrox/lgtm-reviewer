@@ -40,9 +40,10 @@ const run = async () => {
       });
     }
 
+    if (context.payload.pull_request!.changed_files < APPROVABLE_CHANGED_FILES) return
+    createLgtmComment(pull_number);
     createApprovalReview(pull_number);
-    if (context.payload.pull_request!.changed_files > APPROVABLE_CHANGED_FILES)
-      createLgtmComment(pull_number);
+    mergePullRequest
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
