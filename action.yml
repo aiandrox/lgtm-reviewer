@@ -1,9 +1,11 @@
 name: "lgtm reviewer"
 description: "Lonely Gaddem Timeless Manager"
-inputs:
   GITHUB_TOKEN:
     description: "Github token of the repository (automatically created by Github)"
     required: true
+outputs:
+  pull_number: # id of output
+    description: "Created Pull Request Number"
 runs:
   using: "node16"
   main: "dist/index.js"
