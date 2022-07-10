@@ -14,10 +14,14 @@ const run = async () => {
     const pull_number = context.payload.pull_request!.number;
     const message = "LGTM";
 
-    await octokit.rest.issues.createComment({
+    octokit.rest.issues.createComment({
       ...context.repo,
       issue_number: pull_number,
       body: message,
+    });
+    octokit.rest.pulls.merge({
+      ...context.repo,
+      pull_number,
     });
   } catch (error) {
     if (error instanceof Error) {
