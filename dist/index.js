@@ -8877,7 +8877,7 @@ const run = async () => {
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             pull_number: pull_number,
-        });
+        }); // ほげほげ
         if (github_1.context.action == "opened") {
             const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
             console.log(commits.data);
