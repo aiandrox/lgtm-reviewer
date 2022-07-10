@@ -9,6 +9,7 @@ const run = async () => {
       return;
     }
 
+    // test用
     const github_token = core.getInput("GITHUB_TOKEN");
     const octokit = getOctokit(github_token);
     const pull_number = context.payload.pull_request!.number;
