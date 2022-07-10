@@ -8866,6 +8866,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = (0, github_1.getOctokit)(github_token);
+const REACTIONS = ["+1", "laugh", "heart", "hooray", "rocket"];
 const run = async () => {
     try {
         if (github_1.context.eventName !== "pull_request") {
@@ -8879,7 +8880,10 @@ const run = async () => {
             pull_number: pull_number,
         });
         if (github_1.context.payload.action == "opened") {
-            const chunk = Array.from(new Set(commits.data.map((data) => data.commit.message)));
+            addReactions(github_1.context.payload.pull_request.id);
+            const chunk = Array.from(
+            // ほげえええええええええ
+            new Set(commits.data.map((data) => data.commit.message)));
             const randomCommitMessage = chunk[Math.floor(Math.random() * chunk.length)];
             await octokit.rest.issues.createComment({
                 ...github_1.context.repo,
@@ -8887,14 +8891,23 @@ const run = async () => {
                 body: `${randomCommitMessage} がいいね！`,
             });
         }
-        if (false)
-            {} // 今は実行しない
+        if (github_1.context.payload.pull_request.changed_files > 1)
+            approve(pull_number, "LGTM!!"); // 今は実行しない
     }
     catch (error) {
         if (error instanceof Error) {
             core.setFailed(error.message);
         }
     }
+};
+const addReactions = async (comment_id) => {
+    await Promise.allSettled(REACTIONS.map(async (content) => {
+        await octokit.rest.reactions.createForIssueComment({
+            ...github_1.context.repo,
+            comment_id,
+            content,
+        });
+    }));
 };
 const approve = (pull_number, message) => {
     octokit.rest.issues.createComment({
