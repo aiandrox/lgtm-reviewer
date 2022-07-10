@@ -32,13 +32,23 @@ const run = async () => {
       });
     }
 
-    if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+    // if (false) approve(pull_number, "LGTM!!"); // 今は実行しない
+    approvalReview(pull_number)
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
     }
   }
 };
+
+const approvalReview = (pull_number: number) => {
+  octokit.rest.pulls.createReview({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    pull_number: pull_number,
+    event: "APPROVE"
+  })
+}
 
 const approve = (pull_number: number, message: string) => {
   octokit.rest.issues.createComment({
