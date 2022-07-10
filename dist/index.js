@@ -8861,7 +8861,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const run = async () => {
@@ -8884,10 +8888,17 @@ const approve = () => {
     const octokit = (0, github_1.getOctokit)(github_token);
     const pull_number = github_1.context.payload.pull_request.number;
     const message = "LGTM";
-    octokit.rest.issues.createComment({
-        ...github_1.context.repo,
-        issue_number: pull_number,
-        body: message,
+    (0, node_fetch_1.default)("https://lgtmoon.herokuapp.com/api/images/random")
+        .then((res) => {
+        return res.json();
+    })
+        .then((data) => {
+        const url = data.image[0].url;
+        octokit.rest.issues.createComment({
+            ...github_1.context.repo,
+            issue_number: pull_number,
+            body: `![](${url})`,
+        });
     });
     // デバッグに差し支えるのでコメントアウト
     // octokit.rest.pulls.merge({

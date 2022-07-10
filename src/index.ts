@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import * as core from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 
@@ -23,11 +24,18 @@ const approve = () => {
   const pull_number = context.payload.pull_request!.number;
   const message = "LGTM";
 
-  octokit.rest.issues.createComment({
-    ...context.repo,
-    issue_number: pull_number,
-    body: message,
-  });
+  fetch("https://lgtmoon.herokuapp.com/api/images/random")
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      const url:string = data.image[0].url;
+      octokit.rest.issues.createComment({
+        ...context.repo,
+        issue_number: pull_number,
+        body: `![](${url})`,
+      });
+    })
   // デバッグに差し支えるのでコメントアウト
   // octokit.rest.pulls.merge({
   //   ...context.repo,
