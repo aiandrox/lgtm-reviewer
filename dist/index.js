@@ -8892,8 +8892,8 @@ const run = async () => {
                 body: `${randomCommitMessage}がいいね！`,
             });
         }
-        if (false)
-            {} // 今は実行しない
+        if (true)
+            approve(pull_number, "LGTM!!"); // 今は実行しない
     }
     catch (error) {
         if (error instanceof Error) {
