@@ -3,7 +3,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist",
-    "local-run": "act pull_request -e mock_json.json"
+    "local-run": "act pull_request -e opened_pull_request.json"
   },
   "dependencies": {
     "@actions/core": "^1.9.0",
